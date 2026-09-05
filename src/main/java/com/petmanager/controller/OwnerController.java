@@ -1,10 +1,14 @@
 package com.petmanager.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,15 +25,15 @@ public class OwnerController {
     private final OwnerService ownerService;
 
     @PostMapping
-    public ResponseEntity<Integer> saveOwner(OwnerDTO ownerDTO){
+    public ResponseEntity<Integer> saveOwner(@RequestBody OwnerDTO ownerDTO){
         Integer id =  ownerService.saveOwner(ownerDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 
     @PutMapping 
-    public ResponseEntity<Void> updateOwner(int ownerId, OwnerDTO ownerDTO){
+    public ResponseEntity<Void> updateOwner(@RequestBody OwnerDTO ownerDTO){
         try {
-            ownerService.updateOwner(ownerId, ownerDTO);
+            ownerService.updateOwner(ownerDTO.getId(), ownerDTO);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -46,8 +50,9 @@ public class OwnerController {
         }
     }
 
-
-    
-
+    @GetMapping("/all")
+    public ResponseEntity<List<OwnerDTO>> findAll(){
+        return ResponseEntity.status(HttpStatus.OK).body(ownerService.findAllOwners());
+    }
     
 }
