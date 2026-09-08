@@ -12,7 +12,7 @@ import lombok.Setter;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "category")
 @JsonSubTypes({@Type(value = DomesticPetDTO.class, name = "Domestic"), @Type(value = WildPetDTO.class, name = "Wild")})
-@Setter 
+@Setter
 @Getter
 @EqualsAndHashCode 
 public abstract class PetDTO {
