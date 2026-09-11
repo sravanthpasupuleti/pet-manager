@@ -4,15 +4,24 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.petmanager.dto.OwnerDTO;
+import com.petmanager.dto.OwnerPetInfoDTO;
 import com.petmanager.entity.Owner;
 import com.petmanager.exception.OwnerNotFoundException;
 import com.petmanager.exception.ValidationException;
 import com.petmanager.repository.OwnerRepository;
 import com.petmanager.service.OwnerService;
 import com.petmanager.util.OwnerMapper;
+import com.petmanager.util.OwnerPetInfoMapper;
+
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -21,6 +30,7 @@ public class OwnerServiceImpl implements OwnerService{
 
     private final OwnerRepository ownerRepository;
 	private final OwnerMapper ownerMapper;
+	private final OwnerPetInfoMapper ownerPetInfoMapper;
 
     @Value("${owner.not.found}")
     private String ownerNotFound;
@@ -69,4 +79,20 @@ public class OwnerServiceImpl implements OwnerService{
 		return ownerRepository.findAll().stream().map(ownerMapper::ownerToOwnerDTO).toList();
 	}
 
+	public List<OwnerPetInfoDTO> findOwnerDetails(int pageNumber, int pageSize, String sortBy, boolean descending){
+		Direction direction = descending ? Direction.DESC : Direction.ASC;
+		Sort sort = Sort.by(direction, sortBy);
+		Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+		return ownerRepository.findIdAndFirstNameAndLastNameAndPetNameList(pageable)
+							  .stream()
+							  .map(ownerPetInfoMapper::mapObjectArrayToOwnerPetInfoDTO)
+							  .toList();
+	}
+
+	public Page<OwnerPetInfoDTO> findOwnerDetailsAsPage(Pageable pageable){
+		List<OwnerPetInfoDTO> ownerPetInfoDTOs = ownerRepository.findIdAndFirstNameAndLastNameAndPetNamePage(pageable)
+		.stream().map(ownerPetInfoMapper::mapObjectArrayToOwnerPetInfoDTO)
+		.toList();
+		return new PageImpl<>(ownerPetInfoDTOs, pageable, ownerPetInfoDTOs.size());
+	}
 }

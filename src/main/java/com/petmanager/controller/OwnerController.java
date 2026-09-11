@@ -3,6 +3,8 @@ package com.petmanager.controller;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.petmanager.dto.OwnerDTO;
+import com.petmanager.dto.OwnerPetInfoDTO;
 import com.petmanager.dto.UpdatePetDetails;
 import com.petmanager.exception.OwnerNotFoundException;
 import com.petmanager.exception.ValidationException;
@@ -75,6 +78,17 @@ public class OwnerController {
     @GetMapping
     public ResponseEntity<List<OwnerDTO>> findAll(){
         return ResponseEntity.status(HttpStatus.OK).body(ownerService.findAllOwners());
+    }
+
+    @GetMapping ("/details")
+    public ResponseEntity<List<OwnerPetInfoDTO>> findOwnerPetInfoDTO(@RequestParam(defaultValue = "0") int pageNumber, @RequestParam(defaultValue = "5") int pageSize, @RequestParam(defaultValue = "id")  String sortBy, @RequestParam(defaultValue = "false") boolean descending){
+        List<OwnerPetInfoDTO> ownerPetInfoDTOs =  ownerService.findOwnerDetails(pageNumber, pageSize, sortBy, descending);
+        return ResponseEntity.status(HttpStatus.OK).body(ownerPetInfoDTOs);
+    }
+
+    @GetMapping ("/details/page")
+    public ResponseEntity<Page<OwnerPetInfoDTO>> findOwnerPetInfoDTOAsPage(Pageable pageable){
+        return ResponseEntity.status(HttpStatus.OK).body(ownerService.findOwnerDetailsAsPage(pageable));
     }
     
 }
