@@ -81,12 +81,6 @@ public class OwnerController {
     }
 
     @GetMapping ("/details")
-    public ResponseEntity<List<OwnerPetInfoDTO>> findOwnerPetInfoDTO(@RequestParam(defaultValue = "0") int pageNumber, @RequestParam(defaultValue = "5") int pageSize, @RequestParam(defaultValue = "id")  String sortBy, @RequestParam(defaultValue = "false") boolean descending){
-        List<OwnerPetInfoDTO> ownerPetInfoDTOs =  ownerService.findOwnerDetails(pageNumber, pageSize, sortBy, descending);
-        return ResponseEntity.status(HttpStatus.OK).body(ownerPetInfoDTOs);
-    }
-
-    @GetMapping ("/details/page")
     public ResponseEntity<Page<OwnerPetInfoDTO>> findOwnerPetInfoDTOAsPage(Pageable pageable){
         return ResponseEntity.status(HttpStatus.OK).body(ownerService.findOwnerDetailsAsPage(pageable));
     }

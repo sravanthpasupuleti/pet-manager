@@ -19,8 +19,5 @@ public interface OwnerRepository extends JpaRepository<Owner, Integer>{
     List<Owner> findByPet_DomesticPet_BirthDateBetween(LocalDate startDate, LocalDate endDate);
 
     @Query("SELECT obj.id, obj.firstName, obj.lastName, obj.pet.name FROM Owner obj JOIN obj.pet")
-    List<Object[]> findIdAndFirstNameAndLastNameAndPetNameList(Pageable pageable);
-
-    @Query("SELECT obj.id, obj.firstName, obj.lastName, obj.pet.name FROM Owner obj JOIN obj.pet")
     Page<Object[]> findIdAndFirstNameAndLastNameAndPetNamePage(Pageable pageable);
 }

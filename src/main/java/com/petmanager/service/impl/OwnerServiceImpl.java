@@ -79,20 +79,10 @@ public class OwnerServiceImpl implements OwnerService{
 		return ownerRepository.findAll().stream().map(ownerMapper::ownerToOwnerDTO).toList();
 	}
 
-	public List<OwnerPetInfoDTO> findOwnerDetails(int pageNumber, int pageSize, String sortBy, boolean descending){
-		Direction direction = descending ? Direction.DESC : Direction.ASC;
-		Sort sort = Sort.by(direction, sortBy);
-		Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-		return ownerRepository.findIdAndFirstNameAndLastNameAndPetNameList(pageable)
-							  .stream()
-							  .map(ownerPetInfoMapper::mapObjectArrayToOwnerPetInfoDTO)
-							  .toList();
-	}
-
 	public Page<OwnerPetInfoDTO> findOwnerDetailsAsPage(Pageable pageable){
-		List<OwnerPetInfoDTO> ownerPetInfoDTOs = ownerRepository.findIdAndFirstNameAndLastNameAndPetNamePage(pageable)
-		.stream().map(ownerPetInfoMapper::mapObjectArrayToOwnerPetInfoDTO)
+		Page<Object[]> page = ownerRepository.findIdAndFirstNameAndLastNameAndPetNamePage(pageable);
+		List<OwnerPetInfoDTO> ownerPetInfoDTOs = page.stream().map(ownerPetInfoMapper::mapObjectArrayToOwnerPetInfoDTO)
 		.toList();
-		return new PageImpl<>(ownerPetInfoDTOs, pageable, ownerPetInfoDTOs.size());
+		return new PageImpl<>(ownerPetInfoDTOs, pageable, page.getSize());
 	}
 }

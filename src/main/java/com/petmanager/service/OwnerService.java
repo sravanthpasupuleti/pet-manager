@@ -26,7 +26,5 @@ public interface OwnerService {
 
 	List<OwnerDTO> findAllOwners();
 
-	List<OwnerPetInfoDTO> findOwnerDetails(int pageNumber, int pageSize, String sortBy, boolean descending);
-
 	Page<OwnerPetInfoDTO> findOwnerDetailsAsPage(Pageable pageable);
 }
