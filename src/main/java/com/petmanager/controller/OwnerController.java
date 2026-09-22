@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -32,6 +33,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.RequiredArgsConstructor;
 
+@CrossOrigin 
 @RestController 
 @RequiredArgsConstructor 
 @RequestMapping (value = "/owners")
@@ -78,6 +80,11 @@ public class OwnerController {
     @GetMapping
     public ResponseEntity<List<OwnerDTO>> findAll(){
         return ResponseEntity.status(HttpStatus.OK).body(ownerService.findAllOwners());
+    }
+
+    @GetMapping(params = "version=2")
+    public ResponseEntity<List<OwnerDTO>> findAllOwnersWithoutPet(){
+        return ResponseEntity.status(HttpStatus.OK).body(ownerService.findAllOwnersWithoutPet());
     }
 
     @GetMapping ("/details")

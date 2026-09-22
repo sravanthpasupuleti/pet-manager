@@ -61,6 +61,10 @@ public interface OwnerMapper {
 
 
 
+	@Mapping(target = "petDTO", ignore = true)
+	OwnerDTO ownerToOwnerDTOWithoutPet(Owner owner);
+
+	
     
     default void customUpdateOwnerFromDTO(OwnerDTO ownerDTO, Owner owner) {
         updateOwnerFromDTO(ownerDTO, owner);

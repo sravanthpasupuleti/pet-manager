@@ -6,10 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.petmanager.dto.OwnerDTO;
@@ -77,6 +74,10 @@ public class OwnerServiceImpl implements OwnerService{
 
 	public List<OwnerDTO> findAllOwners(){
 		return ownerRepository.findAll().stream().map(ownerMapper::ownerToOwnerDTO).toList();
+	}
+
+	public List<OwnerDTO> findAllOwnersWithoutPet(){
+		return ownerRepository.findAll().stream().map(ownerMapper::ownerToOwnerDTOWithoutPet).toList();
 	}
 
 	public Page<OwnerPetInfoDTO> findOwnerDetailsAsPage(Pageable pageable){

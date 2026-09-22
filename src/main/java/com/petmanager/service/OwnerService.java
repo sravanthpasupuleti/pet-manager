@@ -26,5 +26,7 @@ public interface OwnerService {
 
 	List<OwnerDTO> findAllOwners();
 
+	List<OwnerDTO> findAllOwnersWithoutPet();
+
 	Page<OwnerPetInfoDTO> findOwnerDetailsAsPage(Pageable pageable);
 }
