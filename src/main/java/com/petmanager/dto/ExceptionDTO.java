@@ -18,6 +18,6 @@ import lombok.Setter;
 public class ExceptionDTO {
     private Integer status;          //code
     private HttpStatus error;   //msg like NOT_FOUND, CONFLICT
-    private String message;
+    private String message;     //msg that we write in the messags.properties
     private LocalDateTime timeStamp;
 }

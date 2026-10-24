@@ -5,19 +5,16 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.petmanager.dto.OwnerDTO;
-import com.petmanager.dto.OwnerPetInfoDTO;
 import com.petmanager.entity.Owner;
 import com.petmanager.exception.OwnerNotFoundException;
 import com.petmanager.exception.ValidationException;
 import com.petmanager.repository.OwnerRepository;
 import com.petmanager.service.OwnerService;
 import com.petmanager.util.OwnerMapper;
-import com.petmanager.util.OwnerPetInfoMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,7 +24,6 @@ public class OwnerServiceImpl implements OwnerService{
 
     private final OwnerRepository ownerRepository;
 	private final OwnerMapper ownerMapper;
-	private final OwnerPetInfoMapper ownerPetInfoMapper;
 
     @Value("${owner.not.found}")
     private String ownerNotFound;
@@ -60,8 +56,11 @@ public class OwnerServiceImpl implements OwnerService{
 
 	@Override 
 	public void deleteOwner(int ownerId) throws OwnerNotFoundException{
-		Owner owner = ownerRepository.findById(ownerId).orElseThrow(() -> new OwnerNotFoundException(String.format(ownerNotFound, ownerId)));
-		ownerRepository.delete(owner);
+		if (ownerRepository.existsById(ownerId)) {
+			ownerRepository.deleteById(ownerId);
+		}else{
+			throw new OwnerNotFoundException(String.format(ownerNotFound, ownerId));
+		}
 	}
 
 	public List<OwnerDTO> findAllOwnersByPetDateOfBirthBetween(LocalDate startDate, LocalDate endDate) throws ValidationException{
@@ -72,18 +71,8 @@ public class OwnerServiceImpl implements OwnerService{
 		.stream().map(ownerMapper::ownerToOwnerDTO).toList();
 	}
 
-	public List<OwnerDTO> findAllOwners(){
-		return ownerRepository.findAll().stream().map(ownerMapper::ownerToOwnerDTO).toList();
+	public Page<OwnerDTO> findAllOwners(Pageable pageable){
+		return ownerRepository.findAll(pageable).map(ownerMapper::ownerToOwnerDTO);
 	}
 
-	public List<OwnerDTO> findAllOwnersWithoutPet(){
-		return ownerRepository.findAll().stream().map(ownerMapper::ownerToOwnerDTOWithoutPet).toList();
-	}
-
-	public Page<OwnerPetInfoDTO> findOwnerDetailsAsPage(Pageable pageable){
-		Page<Object[]> page = ownerRepository.findIdAndFirstNameAndLastNameAndPetNamePage(pageable);
-		List<OwnerPetInfoDTO> ownerPetInfoDTOs = page.stream().map(ownerPetInfoMapper::mapObjectArrayToOwnerPetInfoDTO)
-		.toList();
-		return new PageImpl<>(ownerPetInfoDTOs, pageable, page.getSize());
-	}
 }

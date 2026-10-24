@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.petmanager.dto.OwnerDTO;
-import com.petmanager.dto.OwnerPetInfoDTO;
 import com.petmanager.exception.OwnerNotFoundException;
 import com.petmanager.exception.ValidationException;
 
@@ -24,9 +23,5 @@ public interface OwnerService {
 
 	List<OwnerDTO> findAllOwnersByPetDateOfBirthBetween(LocalDate startDate, LocalDate endDate) throws ValidationException;
 
-	List<OwnerDTO> findAllOwners();
-
-	List<OwnerDTO> findAllOwnersWithoutPet();
-
-	Page<OwnerPetInfoDTO> findOwnerDetailsAsPage(Pageable pageable);
+	Page<OwnerDTO> findAllOwners(Pageable pageable);
 }

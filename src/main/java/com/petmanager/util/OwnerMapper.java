@@ -21,6 +21,7 @@ public interface OwnerMapper {
 
     String UNSUPPORTED_PET_INSTANCE = "Unsupported pet instance: %s";
 
+	//convert OwnerDTO to Owner entity
     @Mapping(target = "pet", source = "petDTO")
     Owner ownerDTOToOwner(OwnerDTO ownerDTO);
 
@@ -41,7 +42,7 @@ public interface OwnerMapper {
 
 
 
-
+	//convert Owner entity to OwnerDTO
     @Mapping(source = "pet", target = "petDTO")
 	OwnerDTO ownerToOwnerDTO(Owner owner);
 
@@ -61,10 +62,13 @@ public interface OwnerMapper {
 
 
 
-	@Mapping(target = "petDTO", ignore = true)
-	OwnerDTO ownerToOwnerDTOWithoutPet(Owner owner);
 
-	
+
+	// @Mapping(target = "petDTO", ignore = true)
+	// OwnerDTO ownerToOwnerDTOWithoutPet(Owner owner);
+
+
+
     
     default void customUpdateOwnerFromDTO(OwnerDTO ownerDTO, Owner owner) {
         updateOwnerFromDTO(ownerDTO, owner);

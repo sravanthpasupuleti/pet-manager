@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.petmanager.dto.OwnerDTO;
-import com.petmanager.dto.OwnerPetInfoDTO;
 import com.petmanager.dto.UpdatePetDetails;
 import com.petmanager.exception.OwnerNotFoundException;
 import com.petmanager.exception.ValidationException;
@@ -78,18 +77,8 @@ public class OwnerController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OwnerDTO>> findAll(){
-        return ResponseEntity.status(HttpStatus.OK).body(ownerService.findAllOwners());
-    }
-
-    @GetMapping(params = "version=2")
-    public ResponseEntity<List<OwnerDTO>> findAllOwnersWithoutPet(){
-        return ResponseEntity.status(HttpStatus.OK).body(ownerService.findAllOwnersWithoutPet());
-    }
-
-    @GetMapping ("/details")
-    public ResponseEntity<Page<OwnerPetInfoDTO>> findOwnerPetInfoDTOAsPage(Pageable pageable){
-        return ResponseEntity.status(HttpStatus.OK).body(ownerService.findOwnerDetailsAsPage(pageable));
+    public ResponseEntity<Page<OwnerDTO>> findAll(Pageable pageable){
+        return ResponseEntity.status(HttpStatus.OK).body(ownerService.findAllOwners(pageable));
     }
     
 }
